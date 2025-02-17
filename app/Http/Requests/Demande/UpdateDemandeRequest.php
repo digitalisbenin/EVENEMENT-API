@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Demande;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateDemandeRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class UpdateDemandeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,5 +28,14 @@ class UpdateDemandeRequest extends FormRequest
         return [
             //
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation errors',
+            'data' => $validator->errors()
+        ]));
     }
 }

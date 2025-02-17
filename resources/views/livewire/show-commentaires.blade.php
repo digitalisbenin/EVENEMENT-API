@@ -16,7 +16,7 @@
                 class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Rechercher ...">
         </div>
-        <div>
+        {{-- <div>
             <button wire:click="create" type="button"
                 class="inline-flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><svg
                     class="w-[14px] h-[14px] text-white dark:text-white mt-1 mr-2" aria-hidden="true"
@@ -24,16 +24,22 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
                         d="M9 1v16M1 9h16" />
                 </svg>Ajouter</button>
-        </div>
+        </div> --}}
     </div>
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    Content
+                    Contenu
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Nom repas
+                    Evenement
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Pseudo
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Status
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Action
@@ -48,11 +54,28 @@
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{ $commentaire->content }}
                     </th>
+                    <td class="px-6 py-4 text-gray-900 dark:text-white">
+                        <!-- Affichage du nom de la demande associée -->
+                        {{ $commentaire->demande ? $commentaire->demande->name : 'Demande non associée' }}
+                    </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{ $commentaire->name }}
+                    </th>
                     <td class="px-6 py-4">
-                        {{ $commentaire->repas->name }}
+                        @switch($commentaire->status)
+                            @case('masquer')
+                                <span class=" px-2 py-1 rounded-full" style="background-color: yellow;">{{ $commentaire->status }}</span>
+                                @break
+                            @case('afficher')
+                                <span class=" px-2 py-1 rounded-full" style="background-color: green;">{{ $commentaire->status }}</span>
+                                @break
+                            
+                            @default
+                                {{ $commentaire->status }}
+                        @endswitch
                     </td>
                     <td class="flex items-center px-6 py-4 space-x-3">
-                        <a href="#" wire:click="edit({{ $commentaire }})" wire:loading.attr="disabled"
+                        <a href="show-commentaire-update/{{ $commentaire->id }}" wire:loading.attr="disabled"
                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a>
                         <a href="#" wire:click="delete({{ $commentaire }})" wire:loading.attr="disabled"
                             class="font-medium text-red-600 dark:text-red-500 hover:underline">Supprimer</a>
@@ -96,13 +119,19 @@
         </x-slot>
 
         <x-slot name="content">
-            <div class="mt-4">
-                <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('CONTENT') }}" x-ref="editing.content"
-                    wire:model.defer="editing.content" disabled />
-
-                <x-input-error for="editing.content" class="mt-2" />
-            </div>
             
+            <div class="mt-4">
+                <label for="editing.status"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                <select id="editing.status" wire:model.defer="editing.status"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="afficher">Afficher</option>
+                    <option value="masquer">Masquer</option>
+
+                </select>
+
+                <x-input-error for="editing.status" class="mt-2" />
+            </div>
         </x-slot>
 
         <x-slot name="footer">

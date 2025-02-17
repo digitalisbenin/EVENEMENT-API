@@ -38,6 +38,9 @@
                     Role
                 </th>
                 <th scope="col" class="px-6 py-3">
+                    Status
+                </th>
+                <th scope="col" class="px-6 py-3">
                     Action
                 </th>
             </tr>
@@ -55,6 +58,9 @@
                     </td>
                     <td class="px-6 py-4">
                         {{ $user->role->name }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ $user->status }}
                     </td>
                     <td class="flex items-center px-6 py-4 space-x-3">
                         <a href="#" wire:click="edit({{ $user }})" wire:loading.attr="disabled"
@@ -101,7 +107,7 @@
         </x-slot>
 
         <x-slot name="content">
-            <div class="mt-4">
+            {{-- <div class="mt-4">
                 <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('Nom') }}" x-ref="editing.name"
                     wire:model.defer="editing.name"  />
 
@@ -133,8 +139,21 @@
 
 
                 <x-input-error for="editing.role_id" class="mt-2" />
+            </div> --}}
+            <div class="mt-4">
+
+                <label for="editing.status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                <select id="editing.status" wire:model.defer="editing.status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option selected>Selectionnez le status</option>
+                    <option value="En attente">En attente</option>
+                    <option value="valider">Valider</option>
+                    <option value="suspendue">Suspendue</option>
+                    
+                </select>
+        
+        
+                <x-input-error for="editing.status" class="mt-2" />
             </div>
-            
         </x-slot>
 
         <x-slot name="footer">

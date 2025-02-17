@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->unsignedBigInteger('role_id');
             $table->timestamp('email_verified_at')->nullable();
+            $table->enum('status', ['En attente', 'valider', 'suspendue'])->default('En attente');
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();

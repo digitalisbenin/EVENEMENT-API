@@ -15,4 +15,6 @@ class Vue extends Model
     {
         return $this->belongsTo('App\Models\Demande');
     }
+
+    
 }

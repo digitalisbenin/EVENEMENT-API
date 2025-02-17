@@ -26,21 +26,21 @@ class ShowSpecialite extends Component
     public function delete(Type_demande $specialites)
     {
         $this->deleting = $specialites;
-        $this->action = 'Supprimer un Specialité';
+        $this->action = 'Supprimer une Categorie';
         $this->showDeleteModal = true;
     }
 
     public function edit(Type_demande $specialites)
     {
         $this->editing = $specialites;
-        $this->action = 'Modifier un Specialité';
+        $this->action = 'Modifier une Categorie';
         $this->showEditModal = true;
     }
 
     public function create()
     {
         $this->editing = new Type_demande();
-        $this->action = 'Ajouter un Specialité';
+        $this->action = 'Ajouter un Categorie';
         $this->showEditModal = true;
     }
     public function deleteSelected()

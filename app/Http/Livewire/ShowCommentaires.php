@@ -18,7 +18,9 @@ class ShowCommentaires extends Component
     {
         return [
             'editing.content' => 'required|min:2',
-            'editing.repas_id' => 'required',
+            'editing.name' => 'nullable',
+            'editing.status' => 'nullable',
+            'editing.demande_id' => 'nullable',
             
         ];
     }
@@ -62,6 +64,7 @@ class ShowCommentaires extends Component
 
     public function render()
     {
+        //$commentaires = Commentaire::with('demande')->get();
         return view('livewire.show-commentaires',[
             'commentaires'=> Commentaire::all(),
         ]);

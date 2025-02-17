@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TypeDemande\TypeDemandeCollection;
 use App\Http\Resources\TypeDemande\TypeDemandeResource;
+use App\Http\Controllers\Api\V1\ApiController;
 use App\Models\Type_demande;
 use Illuminate\Http\Request;
 
-class Type_demandeController extends Controller
+class Type_demandeController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -60,8 +61,10 @@ class Type_demandeController extends Controller
      * @param  \App\Models\Type_demande  $type_demande
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Type_demande $type_demande)
+    public function destroy($id)
     {
-        //
+        
+        $type_demande = Type_demande::find($id);
+        $type_demande->delete();
     }
 }

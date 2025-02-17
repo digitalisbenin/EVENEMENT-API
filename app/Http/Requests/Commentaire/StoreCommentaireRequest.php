@@ -27,6 +27,8 @@ class StoreCommentaireRequest extends FormRequest
     {
         return [
             'content' => 'required',
+            'demande_id' => 'required',
+            'name' => 'required',
            
         ];
     }

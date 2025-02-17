@@ -1,0 +1,175 @@
+<?php
+
+namespace App\Http\Livewire;
+
+use App\Models\Partenaire;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+
+class ShowUpdatePartenaire extends Component
+{
+
+    use WithFileUploads;
+    public Partenaire $deleting;
+    public Partenaire $editing;
+    public $showDeleteModal = false;
+    public $showEditModal = false;
+    public $action = '';
+    public $search;
+    public $file;
+    public $partenaire_id;
+
+    public function mount($id)
+    {
+        $this->partenaire_id = request('partenaire');
+        $this->editing =  Partenaire::find($id);
+        //$this->content_en = $this->editing->getTranslation('content', 'en') ?? ''; 
+    }
+    
+    public function getFileType(UploadedFile $file): string
+    {
+        if ($file && $file->isValid()) {
+            $mime = $file->getMimeType();
+    
+            return $this->mimeToType($mime); // Utilisez $this->mimeToType() pour appeler la méthode de la classe
+        }
+    
+        return '';
+    }
+    
+    function mimeToType(string $mime = null): string
+    {
+        if ($mime) {
+            if (strstr($mime, 'image/')) {
+                return 'image';
+            } elseif (strstr($mime, 'video/')) {
+                return 'video';
+            } elseif (strstr($mime, 'audio/')) {
+                return 'audio';
+            } elseif ($mime == 'application/pdf') {
+                return 'pdf';
+            }
+        }
+    
+        return 'file';
+    }
+
+    public function rules()
+    {
+        return [
+            'editing.name' => 'required|min:2',
+            
+            'editing.image' => 'nullable',
+            'editing.sigle' => 'nullable',
+            'editing.contact' => 'nullable',
+            'editing.status' => 'nullable',
+            
+            
+            
+        ];
+    }
+
+    public function delete(Partenaire $partenaires)
+    {
+        $this->deleting = $partenaires;
+        $this->action = 'Supprimer un partenaire';
+        $this->showDeleteModal = true;
+    }
+
+    public function edit(Partenaire $partenaires)
+    {
+        $this->editing = $partenaires;
+        $this->action = 'Modifier un partenaire';
+        $this->showEditModal = true;
+    }
+
+    public function create()
+    {
+        $this->editing = new Partenaire();
+        $this->action = 'Ajouter un partenaire';
+        $this->showEditModal = true;
+    }
+    public function deleteSelected()
+    {
+        $this->deleting->delete();
+
+        $this->showDeleteModal = false;
+
+        //$this->notify('Vous avez supprimé un Publicité');
+    }
+
+    public function save()
+    {
+        // Validation des fichiers
+        $this->validate([
+            'file' => 'nullable|mimetypes:image/jpeg,image/png,image/jpg,video/webm,video/mp4,video/3gpp|max:20480',
+            //'video' => 'nullable|mimetypes:video/webm,video/mp4,video/3gpp|max:20480'
+        ]);
+    
+        // Variables pour stocker les URLs
+        $imageUrl = null;
+        $videoUrl = null;
+    
+        // Traitement du fichier image
+        if ($this->file) {
+            $file = $this->file;
+            $name = time() . $file->getClientOriginalName();
+            $fileType = $this->getFileType($file);
+            
+            if ($fileType === 'image') {
+                $path = 'images';
+            } else {
+                $path = 'videos';  // Assuming file is video if not image
+            }
+            
+            $url = $this->file->storePubliclyAs($path, $name, 's3');
+            $image = "https://bucetwadounou.s3.us-east-1.amazonaws.com/$url";
+            $this->editing->image = $image;
+        }
+    
+        // Traitement du fichier vidéo
+        // if ($this->video) {
+        //     $file = $this->video;
+        //     $name = time() . $file->getClientOriginalName();
+        //     $fileType = $this->getFileType($file);
+            
+        //     if ($fileType === 'video') {
+        //         $path = 'videos';
+        //         $url = $this->video->storePubliclyAs($path, $name, 's3');
+        //         $videoUrl = "https://bucetwadounou.s3.us-east-1.amazonaws.com/$url";
+        //         $this->editing->video = $videoUrl;
+        //     }
+        // }
+    
+        // Enregistrement de la demande avec l'URL de l'image et de la vidéo
+        // Demande::create([
+        //     'name' => $this->editing->name,
+        //     'description' => $this->editing->description,
+        //     'date_debuit' => $this->editing->date_debuit,
+        //     'date_fin' => $this->editing->date_fin,
+        //     'lieu' => $this->editing->lieu,
+        //     'montant' => $this->editing->montant,
+        //     'telephone' => $this->editing->telephone,
+        //     'is_correct' => $this->editing->is_correct,
+        //     'nombre_jour' => $this->editing->nombre_jour,
+        //     'payement'=> $this->editing->payement,
+        //     'status' => $this->editing->status,
+        //     'image' => $imageUrl,
+        //     'video' => $videoUrl,
+        //     'type_demande_id' => $this->editing->type_demande_id,
+        //     'priorite' => $this->editing->priorite,
+        //     'user_id' => $this->editing->user_id,
+        // ]);
+    
+        // Fermeture du modal d'édition
+        $this->editing->save();
+        $this->showEditModal = false;
+        return redirect('/show-partenaires');
+    }
+    public function render()
+    {
+        return view('livewire.show-update-partenaire');
+    }
+}

@@ -24,8 +24,9 @@ return new class extends Migration
             $table->string('image');
             $table->string('video')->nullable();
             $table->integer('montant');
-            $table->integer('nombre_jour')->nullable();
+            $table->string('nombre_jour')->nullable();
             $table->boolean('is_correct')->nullable();
+            $table->boolean('priorite')->nullable();
             $table->enum('status', ['En attente', 'valider', 'terminer']);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('type_demande_id')->nullable();

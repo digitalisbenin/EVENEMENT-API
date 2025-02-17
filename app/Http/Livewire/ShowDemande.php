@@ -16,7 +16,11 @@ class ShowDemande extends Component
     public Demande $deleting;
     public Demande $editing;
     public $showDeleteModal = false;
+    public $showValideteModal = false;
     public $showEditModal = false;
+    public $statusFilter = null;
+    public $showEditModalUne = false;
+    public $showEditModalRejeter = false;
     public $action = '';
     public $search;
     public $file;
@@ -61,7 +65,9 @@ class ShowDemande extends Component
             //'editing.lieu' => 'required',
             //'editing.montant' => 'required',
             //'editing.nombre_jour' => 'required',
-            'editing.status' => 'required',
+            'editing.status' => 'nullable',
+            'editing.priorite' => 'nullable',
+            'editing.payement'=> 'nullable',
             //'editing.telephone' => 'required',
             //'editing.is_correct' => 'required',
             //'editing.type_demande_id' => 'required',
@@ -73,21 +79,37 @@ class ShowDemande extends Component
     public function delete(Demande $demandes)
     {
         $this->deleting = $demandes;
-        $this->action = 'Supprimer un Publicité';
+        $this->action = 'Supprimer un evenement';
         $this->showDeleteModal = true;
     }
-
+    public function valide(Demande $demandes)
+    {
+        $this->editing = $demandes;
+        $this->action = 'Valider un evenement';
+        $this->showValideteModal = true;
+    }
     public function edit(Demande $demandes)
     {
         $this->editing = $demandes;
-        $this->action = 'Modifier un Publicité';
+        $this->action = 'Modifier un evenement';
         $this->showEditModal = true;
     }
-
+    public function editune(Demande $demandes)
+    {
+        $this->editing = $demandes;
+        $this->action = 'Mette un evenement à la une';
+        $this->showEditModalUne = true;
+    }
+    public function editrej(Demande $demandes)
+    {
+        $this->editing = $demandes;
+        $this->action = 'Rejeter un evenement à la une';
+        $this->showEditModalRejeter = true;
+    }
     public function create()
     {
         $this->editing = new Demande();
-        $this->action = 'Ajouter un Publicité';
+        $this->action = 'Ajouter un evenement';
         $this->showEditModal = true;
     }
     public function deleteSelected()
@@ -105,11 +127,20 @@ class ShowDemande extends Component
         $this->editing->save();
         //$this->notify('Enregistrement effectué avec succès');
         $this->showEditModal = false;
+        $this->showValideteModal = false;
+        $this->showEditModalUne = false;
+        $this->showEditModalRejeter = false;
     }
+    public function filterStatus($status)
+{
+    // Si le bouton "Tous" est cliqué, on réinitialise le filtre
+    $this->statusFilter = ($status === 'all') ? null : $status;
+}
     public function render()
     {
         return view('livewire.show-demande',[
-            'demandes'=> Demande::all(),
+            //'demandes'=> Demande::all(),
+            'demandes' => Demande::with(['vue'])->get(),
             'users'=> User::all(),
             'tupedemandes'=> Type_demande::all(), 
         ]);

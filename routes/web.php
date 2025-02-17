@@ -8,6 +8,11 @@ use App\Http\Livewire\ShowPublicite;
 use App\Http\Livewire\ShowCommentaires;
 use App\Http\Livewire\ShowDemande;
 use App\Http\Livewire\ShowDemandes;
+use App\Http\Livewire\ShowUpdateDamande;
+use App\Http\Livewire\ShowPartenaires;
+use App\Http\Livewire\ShowUpdatePublicite;
+use App\Http\Livewire\ShowUpdatePartenaire;
+use App\Http\Livewire\ShowUpdateCommentaire;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,9 +40,14 @@ Route::middleware([
 
 
     Route::get('/show-roles', ShowRoles::class)->name('show-roles');
+    Route::get('/show-partenaires', ShowPartenaires::class)->name('show-partenaires');
+    Route::get('/show-demande-update/{id}', ShowUpdateDamande::class)->name('demandes');
     Route::get('/show-create-demande', ShowDemandes::class)->name('show-create-demande');
     Route::get('/show-users', ShowUsers::class)->name('show-users');
     Route::get('/show-publicites', ShowPublicite::class)->name('show-publicites');
+    Route::get('/show-publicite-update/{id}', ShowUpdatePublicite::class)->name('publicites');
+    Route::get('/show-partenaire-update/{id}', ShowUpdatePartenaire::class)->name('partenaire');
+    Route::get('/show-commentaire-update/{id}', ShowUpdateCommentaire::class)->name('commentaire');
     Route::get('/show-temoignage', ShowTemoignage::class)->name('show-temoignage');
     Route::get('/show-typedemande', ShowSpecialite::class)->name('show-typedemande');
     Route::get('/show-commentaires', ShowCommentaires::class)->name('show-commentaires');

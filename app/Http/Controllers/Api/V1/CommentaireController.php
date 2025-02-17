@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Commentaire\CommentaireResource;
 use App\Http\Requests\Commentaire\StoreCommentaireRequest;
+use App\Http\Resources\Commentaire\CommentaireCollection;
 use App\Models\Commentaire;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,17 @@ class CommentaireController extends Controller
     {
         //
     }
-
+    public function getCommentaire(Request $request)
+    {
+        $request->validate([
+                'demande_id' => 'required',
+    
+            ]);
+            $commentaire = Commentaire::orWhere('demande_id', $request->demande_id)->get();
+            return new CommentaireCollection($commentaire);
+    
+        
+    }
     /**
      * Store a newly created resource in storage.
      *

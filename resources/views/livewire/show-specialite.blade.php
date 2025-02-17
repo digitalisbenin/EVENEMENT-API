@@ -30,11 +30,9 @@
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    Nom
+                    categorie
                 </th>
-                <th scope="col" class="px-6 py-3">
-                    Prix
-                </th>
+                
                 <th scope="col" class="px-6 py-3">
                     Action
                 </th>
@@ -48,9 +46,7 @@
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{ $specialite->name }}
                     </th>
-                    <td class="px-6 py-4">
-                        {{ $specialite->prix }}
-                    </td>
+                   
                     <td class="flex items-center px-6 py-4 space-x-3">
                         <a href="#" wire:click="edit({{ $specialite }})" wire:loading.attr="disabled"
                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Modifier</a>
@@ -102,12 +98,12 @@
 
                 <x-input-error for="editing.name" class="mt-2" />
             </div>
-            <div class="mt-4">
+            {{-- <div class="mt-4">
                 <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('Prix') }}" x-ref="editing.prix"
                     wire:model.defer="editing.prix"  />
 
                 <x-input-error for="editing.prix" class="mt-2" />
-            </div>
+            </div> --}}
         </x-slot>
 
         <x-slot name="footer">

@@ -65,12 +65,15 @@ class ShowDemandes extends Component
             'editing.date_debuit' => 'required',
             'editing.date_fin' => 'required',
             'editing.lieu' => 'required',
-            'editing.montant' => 'required',
+            'editing.montant' => 'nullable|numeric',
+            'editing.payement'=> 'nullable|boolean',
             'editing.nombre_jour' => 'required',
             'editing.status' => 'required',
             'editing.telephone' => 'required',
             'editing.is_correct' => 'required',
             'editing.type_demande_id' => 'required',
+            'editing.priorite' => 'required',
+            'editing.user_id' => 'required',
         ];
     }
 
@@ -152,14 +155,17 @@ class ShowDemandes extends Component
             'date_debuit' => $this->editing->date_debuit,
             'date_fin' => $this->editing->date_fin,
             'lieu' => $this->editing->lieu,
-            'montant' => $this->editing->montant,
+            'montant' => $this->editing->montant ?: null,
             'telephone' => $this->editing->telephone,
             'is_correct' => $this->editing->is_correct,
             'nombre_jour' => $this->editing->nombre_jour,
+            'payement'=> $this->editing->payement === "" ? null : $this->editing->payement,
             'status' => $this->editing->status,
             'image' => $imageUrl,
             'video' => $videoUrl,
             'type_demande_id' => $this->editing->type_demande_id,
+            'priorite' => $this->editing->priorite,
+            'user_id' => $this->editing->user_id,
         ]);
     
         // Fermeture du modal d'édition

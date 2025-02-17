@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('image')->nullable();
             $table->string('video')->nullable();
+            $table->integer('nombre_jour')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
 

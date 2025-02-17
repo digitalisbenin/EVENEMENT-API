@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Signaler\SignalerResource;
+use App\Http\Requests\Signaler\StoreSignalerRequest;
 use App\Models\Signaler;
 use Illuminate\Http\Request;
 
@@ -24,11 +26,16 @@ class SignalerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    // public function store(Request $request)
+    // {
+    //     //
+    // }
+    public function store(StoreSignalerRequest $request)
     {
-        //
-    }
+        $signaler = Signaler::create($request->all());
 
+        return new SignalerResource($signaler);
+    }
     /**
      * Display the specified resource.
      *

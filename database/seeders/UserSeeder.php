@@ -25,6 +25,8 @@ class UserSeeder extends Seeder
                     'email' => 'superadmin@eresto.com',
                     'password' => bcrypt('password'),
                     'role_id' => $roleSupAdm->id,
+                    'status' => 'valider', // Ajout du champ status
+
                 ],
                 
             );

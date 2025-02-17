@@ -16,6 +16,7 @@ class CommentaireResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name'=> $this->name,
             'content'=>$this->content,
             'demande_id'=>$this->demande_id,
  

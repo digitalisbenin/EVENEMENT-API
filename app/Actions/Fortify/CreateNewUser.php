@@ -25,6 +25,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
+            'status' => ['required', 'string', 'in:En attente,valider,suspendue'], // Validation pour status
         ])->validate();
         $roleAuthor = Role::where('name', 'User')->first();
 
@@ -33,6 +34,8 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'role_id' => $roleAuthor->id,
+            'status' => $input['status'], // Ajout du champ status
+
         ]);
     }
 }

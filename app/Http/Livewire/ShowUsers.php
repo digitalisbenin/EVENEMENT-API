@@ -18,10 +18,11 @@ class ShowUsers extends Component
     public function rules()
     {
         return [
-            'editing.name' => 'required|min:2',
-            'editing.email' => 'required',
-            'editing.password' => 'required',
-            'editing.role_id' => 'required',
+            //'editing.name' => 'required|min:2',
+            //'editing.email' => 'required',
+            'editing.status' => 'required',
+            //'editing.password' => 'required',
+            //'editing.role_id' => 'required',
             
             
         ];
@@ -53,14 +54,14 @@ class ShowUsers extends Component
 
         $this->showDeleteModal = false;
 
-        $this->notify('Vous avez supprimé un user');
+        //$this->notify('Vous avez supprimé un user');
     }
 
     public function save()
     {
         $this->validate();
         $this->editing->save();
-        $this->notify('Enregistrement effectué avec succès');
+        //$this->notify('Enregistrement effectué avec succès');
         $this->showEditModal = false;
     }
 

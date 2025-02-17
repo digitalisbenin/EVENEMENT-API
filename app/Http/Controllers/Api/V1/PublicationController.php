@@ -7,6 +7,7 @@ use App\Http\Resources\Publication\PublicationCollection;
 use App\Models\Publication;
 use Illuminate\Http\Request;
 
+
 class PublicationController extends Controller
 {
     /**
@@ -14,10 +15,25 @@ class PublicationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+ 
+
     public function index()
     {
-        return new PublicationCollection(Publication::all());
+       // Récupère la date actuelle sans l'heure
+       $today = date('Y-m-d');
+
+       // Récupère les publications dont la publicité est valide pour aujourd'hui
+       $publications = Publication::whereDate('date_debuit', '<=', $today) // Vérifie que la date_debuit est passée ou est égale à aujourd'hui
+           ->whereRaw('DATE_ADD(date_debuit, INTERVAL nombre_jour DAY) >= ?', [$today]) // Vérifie que la date actuelle est dans la période de validité
+           //->orderBy('nombre_jour', 'desc') // Trier par nombre_jour en ordre décroissant
+           //->take(2) // Limiter à 2 résultats
+           ->get();
+
+       return new PublicationCollection($publications);
     }
+    
+    
+    
 
     /**
      * Store a newly created resource in storage.

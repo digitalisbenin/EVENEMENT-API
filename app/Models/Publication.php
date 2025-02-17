@@ -9,7 +9,7 @@ class Publication extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'image', 'video', 'user_id'];
+    protected $fillable = ['name', 'description', 'image', 'video', 'user_id','nombre_jour','date_debuit','date_fin','status'];
 
     public function user()
     {

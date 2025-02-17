@@ -8,10 +8,12 @@ use App\Http\Controllers\Api\V1\DemandeController;
 use App\Http\Controllers\Api\V1\TemoinageController;
 use App\Http\Controllers\Api\V1\PublicationController;
 use App\Http\Controllers\Api\V1\VueController;
+use App\Http\Controllers\Api\V1\SignalerController;
 use App\Http\Controllers\Api\V1\CommentaireController;
 use App\Http\Controllers\Api\V1\MailController;
 use App\Http\Controllers\Api\V1\Type_demandeController;
 use App\Http\Controllers\Api\V1\MediaController;
+use App\Http\Controllers\Api\V1\PartenaireController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,6 +47,8 @@ Route::middleware('json-response')->prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum', 'json-response'])->group(function () {
     Route::get("logout", [AuthController::class, 'logout']);
     Route::post('/demandes', [DemandeController::class, 'store']);
+    Route::delete('/demandes/{id}', [DemandeController::class, 'destroy']);
+    Route::put('/demandes/{id}', [DemandeController::class, 'update']);
   	Route::get('/profile', function(Request $request) {
         return auth()->user();
     });
@@ -52,13 +56,20 @@ Route::middleware(['auth:sanctum', 'json-response'])->group(function () {
 });
 
 Route::get('/demandes', [DemandeController::class, 'index']);
+Route::get('/demandesattante', [DemandeController::class, 'indexValideEttande']);
+Route::get('/partenaires', [PartenaireController::class, 'index']);
 Route::get('/typedemandes', [Type_demandeController::class, 'index']);
 Route::get('/demandes/{id}', [DemandeController::class, 'show']);
 Route::get('/demandestype', [DemandeController::class, 'getDemandeType']);
+Route::get('/demandeusers', [DemandeController::class, 'getDemandeAdmin']);
+Route::get('/demandeterminer', [DemandeController::class, 'getTerminer']);
+Route::get('/demandetypeterminer', [DemandeController::class, 'getDemandeTypeTerminer']);
+Route::get('/getcommentaires', [CommentaireController::class, 'getCommentaire']);
 Route::get('/temoingnages', [TemoinageController::class, 'index']);
 Route::get('/publictes', [PublicationController::class, 'index']);
 Route::post('/temoingnages', [TemoinageController::class, 'store']);
 Route::post('/vues', [VueController::class, 'store']);
+Route::post('/likes', [SignalerController::class, 'store']);
 Route::post('/commentaires', [CommentaireController::class, 'store']);
 Route::post('/sendemail', [MailController::class, 'sendEmail']);
 Route::post('/medias', [MediaController::class, 'store']);

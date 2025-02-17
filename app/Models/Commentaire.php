@@ -9,7 +9,7 @@ class Commentaire extends Model
 {
     use HasFactory;
 
-     protected $fillable = ['content', 'demande_id', 'user_id'];
+     protected $fillable = ['content', 'demande_id', 'user_id','name','status'];
 
      
     public function user()

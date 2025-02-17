@@ -50,6 +50,37 @@ class ShowPublicite extends Component
     
             return 'file';
         }
+        public function mount()
+{
+    // Initialise une instance de Publication avec des valeurs par défaut
+    $this->editing = new Publication([
+        'name' => '',
+        'description' => '',
+        'date_debuit' => now(),
+        'date_fin' => null,
+        'nombre_jour' => null,
+        'user_id' => null,
+        'status' => '',
+    ]);
+}
+
+public function updateDateFin()
+{
+    // Calculer la date de fin si `date_debuit` et `nombre_jour` sont fournis
+    if (!empty($this->editing->date_debuit) && !empty($this->editing->nombre_jour)) {
+        $this->editing->date_fin = \Carbon\Carbon::parse($this->editing->date_debuit)
+            ->addDays($this->editing->nombre_jour)
+            ->format('Y-m-d H:i:s');
+    }
+
+    // Calculer le nombre de jours si `date_debuit` et `date_fin` sont fournis
+    if (!empty($this->editing->date_debuit) && !empty($this->editing->date_fin)) {
+        $this->editing->nombre_jour = \Carbon\Carbon::parse($this->editing->date_fin)
+            ->diffInDays(\Carbon\Carbon::parse($this->editing->date_debuit));
+    }
+    
+}
+
 
     public function rules()
     {
@@ -58,6 +89,10 @@ class ShowPublicite extends Component
             'editing.description' => 'nullable',
             'editing.image' => 'nullable',
             'editing.user_id' => 'required',
+            'editing.nombre_jour' => 'required',
+            'editing.date_debuit' => 'nullable',
+            'editing.date_fin' => 'nullable',
+            'editing.status' => 'nullable',
             
             
         ];
@@ -76,13 +111,23 @@ class ShowPublicite extends Component
         $this->action = 'Modifier un Publicité';
         $this->showEditModal = true;
     }
+    
 
     public function create()
     {
-        $this->editing = new Publication();
+        $this->editing = new Publication([
+            'name' => '',
+            'description' => '',
+            'date_debuit' => now(),
+            'date_fin' => null,
+            'nombre_jour' => null,
+            'user_id' => null,
+            'status' => '',
+        ]);
         $this->action = 'Ajouter un Publicité';
         $this->showEditModal = true;
     }
+    
     public function deleteSelected()
     {
         $this->deleting->delete();
@@ -127,7 +172,9 @@ class ShowPublicite extends Component
             'name' => $this->editing->name,
             'description' => $this->editing->description,
             'status' => $this->editing->status,
+            'date_debuit' => $this->editing->date_debuit,
             'image' => $url,
+            'nombre_jour' => $this->editing->nombre_jour,
         ]);
         //$this->notify('Enregistrement effectué avec succès');
         $this->showEditModal = false;
