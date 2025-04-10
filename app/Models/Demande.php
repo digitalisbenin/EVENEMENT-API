@@ -10,7 +10,7 @@ class Demande extends Model
     use HasFactory;
 
     
-    protected $fillable = ['name','priorite','payement', 'description', 'date_debuit','date_fin', 'lieu', 'image','video', 'montant', 'nombre_jour','status', 'user_id', 'type_demande_id','is_correct','telephone'];
+    protected $fillable = ['name','priorite','payement', 'description', 'jours', 'date_debuit','date_fin', 'lieu', 'image','video', 'montant', 'nombre_jour','status', 'user_id', 'type_demande_id','is_correct','telephone'];
 
     public function user()
     {

@@ -152,6 +152,22 @@
         <x-input-error for="editing.date_fin" class="mt-2" />
     </div>
     <div class="mt-4">
+        <label for="editing.jours" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jour de la semaine (uniquement pour les événements à répétition)</label>
+        <select id="editing.jours" wire:model.defer="editing.jours" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option selected>Selectionnez un jour</option>
+            <option value="Lundi">Lundi</option>
+            <option value="Mardi">Mardi</option>
+            <option value="Mercredi">Mercredi</option>
+            <option value="Jeudi">Jeudi</option>
+            <option value="Vendredi">Vendredi</option>
+            <option value="Samedi">Samedi</option>
+            <option value="Dimanche">Dimanche</option>
+        </select>
+    
+        <x-input-error for="editing.jours" class="mt-2" />
+    </div>
+    
+    <div class="mt-4">
         <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('Lieux') }}" x-ref="editing.lieu"
             wire:model.defer="editing.lieu"  />
 

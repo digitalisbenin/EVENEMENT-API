@@ -35,6 +35,7 @@ class DemandeResource extends JsonResource
             'user_id'=>$this->user_id,
             'priorite'=>$this->priorite,
             'status' => $this->status,
+            'jours' => $this->jours,
             'type_demande'=> new TypeDemandeResource($this->type_demande),
             'created_at'=>$this->created_at,
             'updated_at'=>$this->updated_at,

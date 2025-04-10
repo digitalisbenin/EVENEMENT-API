@@ -76,6 +76,7 @@ class ShowUpdateDamande extends Component
             'editing.is_correct' => 'nullable',
             'editing.type_demande_id' => 'nullable',
             'editing.priorite' => 'nullable',
+            'editing.jours' => 'nullable',
             'editing.user_id' => 'nullable',
         ];
     }

@@ -33,9 +33,6 @@
                     Sigle
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Nom
-                </th>
-                <th scope="col" class="px-6 py-3">
                     Contact
                 </th>
                 <th scope="col" class="px-6 py-3">
@@ -56,9 +53,9 @@
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{ $partenaire->sigle }}
                     </th>
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{-- <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{ $partenaire->name }}
-                    </th>
+                    </th> --}}
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         {{ $partenaire->contact }}
                     </th>
@@ -131,7 +128,7 @@
 
         <x-slot name="content">
             <div class="mt-4">
-                <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('Nom') }}" x-ref="editing.name"
+                <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('Site_url') }}" x-ref="editing.name"
                     wire:model.defer="editing.name"  />
 
                 <x-input-error for="editing.name" class="mt-2" />

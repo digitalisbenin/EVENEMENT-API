@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('video')->nullable();
             $table->integer('montant');
             $table->string('nombre_jour')->nullable();
+            $table->string('jours')->nullable();
             $table->boolean('is_correct')->nullable();
             $table->boolean('priorite')->nullable();
             $table->enum('status', ['En attente', 'valider', 'terminer']);

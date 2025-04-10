@@ -1,6 +1,6 @@
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white p-4">
     <div class="mt-4">
-        <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('Nom') }}" x-ref="editing.name"
+        <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('Site_url') }}" x-ref="editing.name"
             wire:model.defer="editing.name"  />
 
         <x-input-error for="editing.name" class="mt-2" />

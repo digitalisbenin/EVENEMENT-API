@@ -73,6 +73,7 @@ class ShowDemandes extends Component
             'editing.is_correct' => 'required',
             'editing.type_demande_id' => 'required',
             'editing.priorite' => 'required',
+            'editing.jours' => 'nullable',
             'editing.user_id' => 'required',
         ];
     }
@@ -160,6 +161,7 @@ class ShowDemandes extends Component
             'is_correct' => $this->editing->is_correct,
             'nombre_jour' => $this->editing->nombre_jour,
             'payement'=> $this->editing->payement === "" ? null : $this->editing->payement,
+            'jours' => $this->editing->jours,
             'status' => $this->editing->status,
             'image' => $imageUrl,
             'video' => $videoUrl,
