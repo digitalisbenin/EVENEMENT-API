@@ -16,9 +16,58 @@ class DemandeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // public function index()
+    // {
+    //     // Récupération des demandes dont la date_debuit est égale ou supérieure à la date du jour
+    //     $demandes = Demande::where('date_debuit', '>=', now())
+    //     ->where('status', 'valider')
+    //     ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))') // Optionnel : trie par ordre croissant de date_debuit
+    //         ->get();
+    
+    //     return new DemandeCollection($demandes);
+    // }
+    
+    //  public function index()
+    // {
+    //     // Obtenir le jour actuel en français (ex: "Lundi")
+    //     $days = [
+    //         'Monday' => 'Lundi',
+    //         'Tuesday' => 'Mardi',
+    //         'Wednesday' => 'Mercredi',
+    //         'Thursday' => 'Jeudi',
+    //         'Friday' => 'Vendredi',
+    //         'Saturday' => 'Samedi',
+    //         'Sunday' => 'Dimanche',
+    //     ];
+    
+    //     // Récupérer le jour actuel en anglais
+    //     $todayEnglish = now()->format('l'); // Ex: "Thursday"
+    
+    //     // Convertir en français
+    //     $today = $days[$todayEnglish] ?? $todayEnglish; // Ex: "Jeudi"
+    
+    //     //dd($today);
+    //     // Récupérer les demandes valides
+    //     $demandes = Demande::where('status', 'valider')
+    //         ->where(function ($query) use ($today) {
+    //             $query->where('date_debuit', '>=', now()) // Événements futurs
+    //                   ->orWhereRaw("LOWER(jours) = ?", [strtolower($today)]); // Événements passés avec le même jour
+    //         })
+    //         ->orderByRaw("
+    //         CASE 
+    //             WHEN LOWER(jours) = ? THEN 0 
+    //             ELSE 1 
+    //         END, 
+    //         ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))
+    //     ", [strtolower($today)]) // Trier les événements par date
+    //         ->get();
+    //         //dd($demandes);
+    //     return new DemandeCollection($demandes);
+    // }
+    
     public function index()
     {
-        // Obtenir le jour actuel en français (ex: "Lundi")
+        // Obtenir le jour actuel en français
         $days = [
             'Monday' => 'Lundi',
             'Tuesday' => 'Mardi',
@@ -29,34 +78,51 @@ class DemandeController extends Controller
             'Sunday' => 'Dimanche',
         ];
     
-        // Récupérer le jour actuel en anglais
-        $todayEnglish = now()->format('l'); // Ex: "Thursday"
+        $todayEnglish = now()->format('l');
+        $today = $days[$todayEnglish] ?? $todayEnglish;
     
-        // Convertir en français
-        $today = $days[$todayEnglish] ?? $todayEnglish; // Ex: "Jeudi"
+        $now = now();
     
-        //dd($today);
-        // Récupérer les demandes valides
         $demandes = Demande::where('status', 'valider')
-            ->where(function ($query) use ($today) {
-                $query->where('date_debuit', '>=', now()) // Événements futurs
-                      ->orWhereRaw("LOWER(jours) = ?", [strtolower($today)]); // Événements passés avec le même jour
+            ->where(function ($query) use ($today, $now) {
+                $query->where(function ($subquery) use ($today, $now) {
+                    $subquery->whereNotNull('jours')
+                             ->where(function ($q) use ($today, $now) {
+                                 $q->whereRaw("LOWER(jours) = ?", [strtolower($today)])
+                                   ->orWhere(function ($qq) use ($now) {
+                                       $qq->whereDate('date_debuit', '<=', $now)
+                                          ->whereDate('date_fin', '>=', $now);
+                                   });
+                             });
+                })->orWhere(function ($subquery) use ($now) {
+                    $subquery->whereNull('jours')
+                             ->where('date_debuit', '>=', $now);
+                });
             })
-             ->orderByRaw("
-        CASE 
-            WHEN LOWER(jours) = ? THEN 0 
-            ELSE 1 
-        END, 
-        ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))
-    ", [strtolower($today)])// Trier les événements par date
+            ->orderByRaw("
+                CASE 
+                    WHEN LOWER(jours) = ? THEN 0 
+                    ELSE 1 
+                END, 
+                ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))
+            ", [strtolower($today)])
             ->get();
-            //dd($demandes);
+    
         return new DemandeCollection($demandes);
     }
+
+    // public function indexValideEttande()
+    // {
+    //     // Récupération des demandes dont la date_debuit est égale ou supérieure à la date du jour
+    //     $demandes = Demande::where('date_debuit', '>=', now())
+    //     //->where('status', 'valider')
+    //     ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))') // Optionnel : trie par ordre croissant de date_debuit
+    //         ->get();
     
-
-
-    public function indexValideEttande()
+    //     return new DemandeCollection($demandes);
+    // }
+    
+     public function indexValideEttande()
     {
         // // Récupération des demandes dont la date_debuit est égale ou supérieure à la date du jour
         // $demandes = Demande::where('date_debuit', '>=', now())
@@ -67,16 +133,97 @@ class DemandeController extends Controller
         // return new DemandeCollection($demandes);
         return new DemandeCollection(Demande::all());
     }
-    
     public function getTerminer()
 {
-    
+    // Récupération des demandes dont la date_debut est inférieure ou égale à la date actuelle
+    $demandes = Demande::where('date_debuit', '<', now())
+        ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))') // Trie par écart de temps
+        ->get();
 
-    return new DemandeCollection(Demande::all());
+    return new DemandeCollection($demandes);
 }
 
+//     public function getTerminer()
+// {
+    
 
-public function getDemandeTypeTerminer(Request $request)
+//     return new DemandeCollection(Demande::all());
+// }
+
+    // public function getDemandeType(Request $request)
+    // {
+    //     // Validation des données reçues
+    //     $request->validate([
+    //         'type_demande_id' => 'required|exists:type_demandes,id', // Vérifie que le type de demande existe
+    //     ]);
+    
+    //     // Récupération des demandes correspondant au type_demande_id avec date_debuit >= aujourd'hui
+    //     $demandes = Demande::where('type_demande_id', $request->type_demande_id)
+    //         ->where('date_debuit', '>=', now()) // Filtrer par date_debuit
+    //         ->where('status', 'valider')
+    //         ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))')// Optionnel : trie par date_debuit croissante
+    //         ->get();
+    
+    //     // Retourner les résultats sous forme de collection
+    //     return new DemandeCollection($demandes);
+    // }
+    
+    //   
+    
+    public function getDemandeType(Request $request)
+{
+    // Validation des données reçues
+    $request->validate([
+        'type_demande_id' => 'required|exists:type_demandes,id',
+    ]);
+
+    // Tableau des jours de la semaine en français
+    $days = [
+        'Monday' => 'Lundi',
+        'Tuesday' => 'Mardi',
+        'Wednesday' => 'Mercredi',
+        'Thursday' => 'Jeudi',
+        'Friday' => 'Vendredi',
+        'Saturday' => 'Samedi',
+        'Sunday' => 'Dimanche',
+    ];
+
+    // Jour actuel en français
+    $todayEnglish = now()->format('l');
+    $today = $days[$todayEnglish] ?? $todayEnglish;
+    $now = now();
+
+    $demandes = Demande::where('type_demande_id', $request->type_demande_id)
+        ->where('status', 'valider')
+        ->where(function ($query) use ($today, $now) {
+            $query->where(function ($subquery) use ($today, $now) {
+                $subquery->whereNotNull('jours')
+                         ->where(function ($q) use ($today, $now) {
+                             $q->whereRaw("LOWER(jours) = ?", [strtolower($today)])
+                               ->orWhere(function ($qq) use ($now) {
+                                   $qq->whereDate('date_debuit', '<=', $now)
+                                      ->whereDate('date_fin', '>=', $now);
+                               });
+                         });
+            })->orWhere(function ($subquery) use ($now) {
+                $subquery->whereNull('jours')
+                         ->where('date_debuit', '>=', $now);
+            });
+        })
+        ->orderByRaw("
+            CASE 
+                WHEN LOWER(jours) = ? THEN 0 
+                ELSE 1 
+            END, 
+            ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))
+        ", [strtolower($today)])
+        ->get();
+
+    return new DemandeCollection($demandes);
+}
+
+    
+    public function getDemandeTypeTerminer(Request $request)
 {
     // Validation des données reçues
     $request->validate([
@@ -94,55 +241,7 @@ public function getDemandeTypeTerminer(Request $request)
     return new DemandeCollection($demandes);
 }
 
-            public function getDemandeType(Request $request)
-            {
-                // Validation des données reçues
-                $request->validate([
-                    'type_demande_id' => 'required|exists:type_demandes,id', // Vérifie que le type de demande existe
-                ]);
-
-                // Tableau des jours de la semaine en français
-                $days = [
-                    'Monday' => 'Lundi',
-                    'Tuesday' => 'Mardi',
-                    'Wednesday' => 'Mercredi',
-                    'Thursday' => 'Jeudi',
-                    'Friday' => 'Vendredi',
-                    'Saturday' => 'Samedi',
-                    'Sunday' => 'Dimanche',
-                ];
-
-                // Récupérer le jour actuel en anglais (par exemple "Thursday")
-                $todayEnglish = now()->format('l');
-
-                // Convertir en français (par exemple "Jeudi")
-                $today = $days[$todayEnglish] ?? $todayEnglish;
-
-                // Récupération des demandes correspondant au type_demande_id, date_debuit >= aujourd'hui
-                $demandes = Demande::where('type_demande_id', $request->type_demande_id)
-                    // ->where('date_debuit', '>=', now()) // Filtrer par date_debuit
-                    ->where('status', 'valider')
-                    ->where(function ($query) use ($today) {
-                        // Filtrer les demandes dont le jour de la semaine est aujourd'hui (ou passé avec le même jour)
-                        $query->where('date_debuit', '>=', now()) // Événements futurs
-                            ->orWhereRaw("LOWER(jours) = ?", [strtolower($today)]); // Événements passés avec le même jour
-                    })
-                    ->orderByRaw("
-                    CASE 
-                        WHEN LOWER(jours) = ? THEN 0 
-                        ELSE 1 
-                    END, 
-                    ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))
-                ", [strtolower($today)]) // Optionnel : trie par date_debuit croissante
-                    ->get();
-
-                // Retourner les résultats sous forme de collection
-                return new DemandeCollection($demandes);
-            }
-
-    
-
-    public function getDemandeAdmin()
+ public function getDemandeAdmin()
     {
         // Validation des données reçues
         // $request->validate([
@@ -154,7 +253,7 @@ public function getDemandeTypeTerminer(Request $request)
         $demandes = Demande::where('priorite', 1)
             ->where('date_debuit', '>=', now()) // Filtrer par date_debuit
             //->where('status', 'valider')
-            ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, created_at, NOW()))')
+            ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))')
             //->orderBy('created_at', 'desc') // Trie du plus récent au plus ancien
             ->get();
     
