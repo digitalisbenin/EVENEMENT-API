@@ -154,6 +154,12 @@
         <x-input-error for="editing.lieu" class="mt-2" />
     </div>
     <div class="mt-4">
+        <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('Maps') }}" x-ref="editing.maps"
+            wire:model.defer="editing.maps"  />
+
+        <x-input-error for="editing.maps" class="mt-2" />
+    </div>
+    <div class="mt-4">
         <x-input type="text" class="mt-1 block w-full" placeholder="{{ __('Ticket') }}" x-ref="editing.nombre_jour"
             wire:model.defer="editing.nombre_jour"  />
 

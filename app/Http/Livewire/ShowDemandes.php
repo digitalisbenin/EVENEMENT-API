@@ -75,6 +75,7 @@ class ShowDemandes extends Component
             'editing.priorite' => 'required',
             'editing.jours' => 'nullable',
             'editing.user_id' => 'required',
+            'editing.maps' => 'nullable',
         ];
     }
 
@@ -163,6 +164,7 @@ class ShowDemandes extends Component
             'payement'=> $this->editing->payement === "" ? null : $this->editing->payement,
             'jours' => $this->editing->jours,
             'status' => $this->editing->status,
+            'maps' => $this->editing->maps,
             'image' => $imageUrl,
             'video' => $videoUrl,
             'type_demande_id' => $this->editing->type_demande_id,
