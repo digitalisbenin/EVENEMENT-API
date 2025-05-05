@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Partenaire\PartenaireCollection;
 use App\Models\Partenaire;
+use App\Models\Demande;
 use Illuminate\Http\Request;
 
 class PartenaireController extends Controller
@@ -36,11 +37,16 @@ class PartenaireController extends Controller
      * @param  \App\Models\Partenaire  $partenaire
      * @return \Illuminate\Http\Response
      */
-    public function show(Partenaire $partenaire)
+    // public function show(Partenaire $partenaire)
+    // {
+    //     //
+    // }
+    public function show($id)
     {
-        //
-    }
+        $demande = Demande::findOrFail($id);
 
+        return view('partage', compact('demande'));
+    }
     /**
      * Update the specified resource in storage.
      *

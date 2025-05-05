@@ -251,9 +251,9 @@ class DemandeController extends Controller
         // Récupération des demandes avec priorite=1, triées par date de création décroissante
         //$demandes = Demande::where('user_id', $request->user_id)
         $demandes = Demande::where('priorite', 1)
-            ->where('date_debuit', '>=', now()) // Filtrer par date_debuit
-            //->where('status', 'valider')
-            ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))')
+            // ->where('date_debuit', '>=', now()) // Filtrer par date_debuit
+            ->where('status', 'valider')
+            // ->orderByRaw('ABS(TIMESTAMPDIFF(SECOND, date_debuit, NOW()))')
             //->orderBy('created_at', 'desc') // Trie du plus récent au plus ancien
             ->get();
     

@@ -14,6 +14,7 @@ use App\Http\Livewire\ShowUpdatePublicite;
 use App\Http\Livewire\ShowUpdatePartenaire;
 use App\Http\Livewire\ShowUpdateCommentaire;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PartageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+
+Route::get('/partage/{id}', [PartageController::class, 'show'])->name('partage.show');
+
 
 Route::get('/', function () {
     return redirect('/login');
